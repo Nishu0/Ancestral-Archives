@@ -20,6 +20,11 @@ app.use(session({
     secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
 }));
 
+const User=require('./models/user')
+const Places=require('./models/places')
+
+const userRoutes=require('./routes/user-routes');
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({ secret: 'sessionlet' }))
@@ -44,8 +49,12 @@ const requireLogin = (req, res, next) => {
 
 //--------------------------------------------------------------
 // Index page
-app.get('/',(req,res)=>{
+app.get('/',requireLogin,(req,res)=>{
     res.render('index.ejs');
+});
+
+app.get('/gallery',(req,res)=>{
+    res.render('gallery.ejs');
 });
 
 
@@ -58,8 +67,19 @@ app.get('/login',(req,res)=>{
 	res.render('login.ejs')
 })
 
+app.post('/login',userRoutes)
+app.post('/register', userRoutes);
+
 app.get('/register',(req,res)=>{
 	res.render('register.ejs')
+})
+
+app.get('/places',(req,res)=>{
+	res.render('places.ejs')
+})
+
+app.get('/foods',(req,res)=>{
+	res.render('foods.ejs')
 })
 
 app.listen(port, () => {
